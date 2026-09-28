@@ -1,25 +1,38 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, 'Le nom est obligatoire'],
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: [true, "L'adresse e-mail est obligatoire"],
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: [true, 'Le mot de passe est obligatoire'],
+      select: false,
+    },
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-    trim: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-}
-, { timestamps: true });
+  {
+    timestamps: true,
+    toJSON: {
+      transform: (_doc, ret) => {
+        delete ret.password;
+        delete ret.__v;
+        return ret;
+      },
+    },
+  }
+);
+
 userSchema.pre('save', async function () {
   if (!this.isModified('password')) return;
 
