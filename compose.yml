@@ -2,6 +2,7 @@ services:
   api:
     build: .
     container_name: machinecare_api
+    command: npm run dev
     ports:
       - "${PORT:-5000}:${PORT:-5000}"
     env_file:
@@ -11,8 +12,8 @@ services:
       - MONGO_URI=${MONGO_URI}
       - JWT_SECRET=${JWT_SECRET}
     volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+      - .:/app
+      - /app/node_modules
     depends_on:
       - mongo
   mongo:
