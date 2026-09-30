@@ -1,20 +1,22 @@
-import { createUser } from '../services/userService.js';
+import { matchedData } from 'express-validator';
+import * as userService from '../services/userService.js';
 
-export const registerUser = async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
-
-    if (!name || !email || !password) {
-      return res.status(400).json({ message: 'name, email and password are required' });
-    }
-
-    const user = await createUser({ name, email, password });
-    return res.status(201).json({ message: 'User created successfully', user });
-  } catch (error) {
-    console.error(' [registerUser] Error:', error);
-    const status = error.statusCode || 500;
-    const message = status < 500 ? error.message : 'Internal server error';
-    return res.status(status).json({ message });
-  }
+export const createUser = async (req, res) => {
+  const user = await userService.createUser(matchedData(req));
+  res.status(201).json({ message: 'Utilisateur créé avec succès', user });
 };
 
+export const listUsers = async (req, res) => {
+  const users = await userService.listUsers();
+  res.status(200).json({ count: users.length, users });
+};
+
+export const getMyProfile = async (req, res) => {
+  const user = await userService.getUserById(req.user.userId);
+  res.status(200).json({ user });
+};
+
+export const updateMyProfile = async (req, res) => {
+  const user = await userService.updateProfile(req.user.userId, matchedData(req));
+  res.status(200).json({ message: 'Profil mis à jour avec succès', user });
+};
