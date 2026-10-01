@@ -4,6 +4,7 @@ import connectDB from './config/db.js';
 import mongoose from 'mongoose';
 import { seedInitialUser } from './config/seedUser.js';
 import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ connectDB();
 const PORT = process.env.PORT || 5000;
 
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
 app.listen(PORT, () => {
   console.log(`Serveur en ligne sur http://localhost:${PORT}`);
