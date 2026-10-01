@@ -1,11 +1,13 @@
 import mongoose from 'mongoose';
+import { SIGNALEMENT_STATUSES } from '../utils/constants.js';
 
 const signalementSchema = new mongoose.Schema(
   {
     machine: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'machine',
-      required: true,
+      ref: 'Machine',
+      required: [true, 'La machine est obligatoire'],
+      index: true,
     },
     declaredBy: {
       type: mongoose.Schema.Types.ObjectId,
@@ -14,13 +16,17 @@ const signalementSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      required: true,
+      required: [true, 'La description est obligatoire'],
       trim: true,
     },
     status: {
       type: String,
-      enum: ['ouvert', 'en cours', 'résolu'],
+      enum: {
+        values: SIGNALEMENT_STATUSES,
+        message: `Statut inconnu. Valeurs possibles : ${SIGNALEMENT_STATUSES.join(', ')}`,
+      },
       default: 'ouvert',
+      index: true,
     },
     noteResolution: {
       type: String,
@@ -29,8 +35,12 @@ const signalementSchema = new mongoose.Schema(
     dateResolution: {
       type: Date,
     },
+    resolvedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
 
 const Signalement = mongoose.model('Signalement', signalementSchema);
