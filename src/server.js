@@ -1,35 +1,23 @@
-import express from 'express';
-import dotenv from 'dotenv';
+import 'dotenv/config';
+import app from './app.js';
 import connectDB from './config/db.js';
-import mongoose from 'mongoose';
 import { seedInitialUser } from './config/seedUser.js';
-import authRoutes from './routes/authRoutes.js';
-import userRoutes from './routes/userRoutes.js';
-import machineRoutes from './routes/machineRoutes.js';
-import signalementRoutes from './routes/signalementRoutes.js';
 
-dotenv.config();
-
-const app = express();
-
-app.use(express.json());
-
-connectDB();
+const REQUIRED_ENV = ['MONGO_URI', 'JWT_SECRET'];
+const missing = REQUIRED_ENV.filter((key) => !process.env[key]);
+if (missing.length) {
+  console.error(`Variables d'environnement manquantes : ${missing.join(', ')} (voir .env.example)`);
+  process.exit(1);
+}
 
 const PORT = process.env.PORT || 5000;
 
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/machines', machineRoutes);  
-app.use('/api/signalements', signalementRoutes);
-app.listen(PORT, () => {
-  console.log(`Serveur en ligne sur http://localhost:${PORT}`);
-});
-console.log("Test de Hot Reload!");
+const start = async () => {
+  await connectDB();
+  await seedInitialUser();
+  app.listen(PORT, () => {
+    console.log(`Serveur en ligne sur http://localhost:${PORT}`);
+  });
+};
 
-mongoose.connect(process.env.MONGO_URI).then(async() => {
-  console.log('Connected to MongoDB');
-  await seedInitialUser(); 
-}).catch((error) => {
-  console.error('Error connecting to MongoDB:', error.message);
-});
+start();
