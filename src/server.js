@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import { seedInitialUser } from './config/seedUser.js';
 import authRoutes from './routes/authRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import machineRoutes from './routes/machineRoutes.js';
 
 dotenv.config();
 
@@ -18,7 +19,7 @@ const PORT = process.env.PORT || 5000;
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
-
+app.use('/api/machines', machineRoutes);  
 app.listen(PORT, () => {
   console.log(`Serveur en ligne sur http://localhost:${PORT}`);
 });
