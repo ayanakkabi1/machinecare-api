@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const machineschema =new mongoose.Schema({
+const machineschema = new mongoose.Schema({
     reference :{
         type : String,
         required : true,
