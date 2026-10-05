@@ -19,8 +19,15 @@ const signalementSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['ouvert', 'ferme'],
+      enum: ['ouvert', 'en cours', 'résolu'],
       default: 'ouvert',
+    },
+    noteResolution: {
+      type: String,
+      trim: true,
+    },
+    dateResolution: {
+      type: Date,
     },
   },
   { timestamps: true }
