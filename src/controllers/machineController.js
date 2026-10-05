@@ -1,4 +1,4 @@
-import { createMachine } from "../services/machineService.js";
+import  createMachine  from "../services/machineService.js";
 
 export const MachineCreate = async (req, res) => {
    try{
@@ -13,4 +13,3 @@ export const MachineCreate = async (req, res) => {
     return res.status(500).json({ message: 'Internal server error' });
    }
 }
-fmap

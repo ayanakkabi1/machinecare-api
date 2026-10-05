@@ -11,7 +11,7 @@ export const loginUser = async (email, password) => {
         throw new Error('Invalid credentials');
     }
     const token = jwt.sign(
-        { userId: user._id,email: user.email},
+        { _id: user._id, userId: user._id, email: user.email},
         process.env.JWT_SECRET,
         {expiresIn:'24h'}
     );
